@@ -59,7 +59,7 @@ public function store()
     }
     return redirect()->back()->with('error', 'Failed to add user.');
 }
-    //update user information
+    //
     public function update()
     {
         $userModel = new UserModel();
@@ -91,7 +91,7 @@ public function store()
             return redirect()->back()->with('error', 'Failed to update user.');
         }
     }
-    //approve user registration and send email notification
+
     public function approve()
     {
         $id = $this->request->getPost('id');
@@ -99,8 +99,9 @@ public function store()
         $fullname = $this->request->getPost('fullname');
 
         $userModel = new UserModel();
-        // Update the user's verification status to approved (1) and send email
+
         if ($userModel->update($id, ['is_verified' => 1])) {
+            // Grab the Admin's name from the active session
             $adminName = session()->get('fullname');
 
             $logModel = new LogModel();
@@ -118,7 +119,10 @@ public function store()
             return redirect()->back()->with('error', 'Failed to approve user.');
         }
     }
-//deactivate user instead of deleting permanently
+
+    // ==============================================
+    // DELETE / REJECT USER
+    // ==============================================
  public function delete()
 {
     $userModel = new UserModel();
@@ -127,7 +131,7 @@ public function store()
 
     if (!$user) return redirect()->back()->with('error', 'User not found.');
 
-    //Block deactivation if this is the only Admin left
+    // SECURITY: At least 1 admin must stay ACTIVE
     if ($user['role'] === 'Admin' && $user['status'] === 'Active') {
         $adminCount = $userModel->where('role', 'Admin')->where('status', 'Active')->countAllResults();
         if ($adminCount <= 1) {
@@ -141,12 +145,13 @@ public function store()
     }
     return redirect()->back()->with('error', 'Failed to update user status.');
 }
-    //send email using PHPMailer
+
     private function sendEmailNotification($recipientEmail, $recipientName, $actionType)
     {
         $mail = new PHPMailer(true);
 
         try {
+            // Server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; 
             $mail->SMTPAuth   = true;

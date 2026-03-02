@@ -141,12 +141,13 @@ public function store()
     }
     return redirect()->back()->with('error', 'Failed to update user status.');
 }
-    //send email using PHPMailer
+    //
     private function sendEmailNotification($recipientEmail, $recipientName, $actionType)
     {
         $mail = new PHPMailer(true);
 
         try {
+            // Server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; 
             $mail->SMTPAuth   = true;

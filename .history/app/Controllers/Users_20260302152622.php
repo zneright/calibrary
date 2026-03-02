@@ -118,7 +118,7 @@ public function store()
             return redirect()->back()->with('error', 'Failed to approve user.');
         }
     }
-//deactivate user instead of deleting permanently
+//deactivate user instead of deleting 
  public function delete()
 {
     $userModel = new UserModel();
@@ -127,7 +127,7 @@ public function store()
 
     if (!$user) return redirect()->back()->with('error', 'User not found.');
 
-    //Block deactivation if this is the only Admin left
+    // SECURITY: At least 1 admin must stay ACTIVE
     if ($user['role'] === 'Admin' && $user['status'] === 'Active') {
         $adminCount = $userModel->where('role', 'Admin')->where('status', 'Active')->countAllResults();
         if ($adminCount <= 1) {
@@ -141,12 +141,13 @@ public function store()
     }
     return redirect()->back()->with('error', 'Failed to update user status.');
 }
-    //send email using PHPMailer
+
     private function sendEmailNotification($recipientEmail, $recipientName, $actionType)
     {
         $mail = new PHPMailer(true);
 
         try {
+            // Server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; 
             $mail->SMTPAuth   = true;

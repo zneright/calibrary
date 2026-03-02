@@ -272,7 +272,7 @@ $(document).ready(function () {
     });
 });
 
-// Reactivate User
+// Reactivate User Logic
 function reactivateUser(id) {
     if(confirm('Reactivate this user?')) {
         window.location.href = "<?= base_url('admin/users/reactivate/') ?>" + id;

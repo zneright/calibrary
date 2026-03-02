@@ -259,7 +259,7 @@ $(document).ready(function () {
         }
     });
 
-    // Edit Modal
+    // Edit Modal Logic
     $(document).on('click', '.edit-user-btn', function() {
         $('#edit_id').val($(this).data('id'));
         $('#edit_userid').val($(this).data('userid'));
@@ -272,7 +272,7 @@ $(document).ready(function () {
     });
 });
 
-// Reactivate User
+// Reactivate User Logic
 function reactivateUser(id) {
     if(confirm('Reactivate this user?')) {
         window.location.href = "<?= base_url('admin/users/reactivate/') ?>" + id;

@@ -366,7 +366,7 @@ public function updateProfile()
         
         return redirect()->to('/borrower/profile')->with('success', 'Your password has been changed successfully.');
     }
-    //update profile picture
+    //upda
    public function uploadAvatar()
     {
         $validationRule = [

@@ -147,6 +147,7 @@ public function store()
         $mail = new PHPMailer(true);
 
         try {
+            // Server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; 
             $mail->SMTPAuth   = true;

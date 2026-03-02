@@ -279,7 +279,7 @@ class BorrowerController extends BaseController
         if ($existing) {
             return redirect()->back()->with('error', 'You already have an active request for this item.');
         }
-        //pending new trx
+
         $transactionModel->insert([
             'user_id_num'      => $userId,
             'user_name'        => session()->get('fullname'),
@@ -366,7 +366,7 @@ public function updateProfile()
         
         return redirect()->to('/borrower/profile')->with('success', 'Your password has been changed successfully.');
     }
-    //update profile picture
+
    public function uploadAvatar()
     {
         $validationRule = [

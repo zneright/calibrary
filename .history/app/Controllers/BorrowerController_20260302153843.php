@@ -134,7 +134,7 @@ class BorrowerController extends BaseController
 
         $transactionModel = new TransactionModel();
         
-        
+        // disa
         $userTransactions = [];
         $userTrans = $transactionModel->where('user_id_num', $userId)
                                       ->whereIn('status', ['Pending', 'Approved', 'Borrowed', 'Renewing'])
@@ -240,10 +240,9 @@ class BorrowerController extends BaseController
             return $this->response->setJSON(['status' => 'success']);
         }
     }
-    //create new borrow request
+
     public function submitRequest()
     {
-        //validation add new pa
         $rules = [
             'date_needed' => 'required|valid_date',
             'reason'      => 'required|min_length[5]'
@@ -266,20 +265,21 @@ class BorrowerController extends BaseController
         $itemTitle = ($sourceTable === 'journals') ? ($item['subject'] ?? '') : ($item['title'] ?? '');
         $itemStatus = $item ? strtoupper($item['status']) : '';
         
+        // ONLY block if BORROWED or LOST. ALLOW Pending/Approved/Damaged to be requested.
         if (!$item || in_array($itemStatus, ['BORROWED', 'LOST'])) {
             return redirect()->back()->with('error', 'Sorry, this item is currently on hand or lost.');
         }
 
         $userId = session()->get('user_id');
         
-        // no duplicate request for the same item if there's already an active transaction
+        // Check if THIS user already has an active request for this specific book
         $existing = $transactionModel->where(['user_id_num' => $userId, 'collection_id' => $collectionId])
                                     ->whereIn('status', ['Pending', 'Approved', 'Borrowed', 'Renewing'])
                                     ->first();
         if ($existing) {
             return redirect()->back()->with('error', 'You already have an active request for this item.');
         }
-        //pending new trx
+
         $transactionModel->insert([
             'user_id_num'      => $userId,
             'user_name'        => session()->get('fullname'),
@@ -366,7 +366,7 @@ public function updateProfile()
         
         return redirect()->to('/borrower/profile')->with('success', 'Your password has been changed successfully.');
     }
-    //update profile picture
+
    public function uploadAvatar()
     {
         $validationRule = [
