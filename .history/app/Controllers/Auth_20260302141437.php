@@ -137,7 +137,7 @@ class Auth extends BaseController
             }
         }
     }
-    //  PHPMailer to send an email to the newly registered user
+
     private function sendApprovalWaitEmail($recipientEmail, $recipientName)
     {
         $mail = new PHPMailer(true);

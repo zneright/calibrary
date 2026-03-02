@@ -35,7 +35,7 @@ class Reports extends BaseController
             $data['showReports'] = true;
             $categories = $this->request->getGet('categories');
 
-            // 1. Process Collections Filter (Sorted Recent First)
+            // 1. Process Collections Filter
             if (in_array('collections', $categories)) {
                 $data['showCollections'] = true;
                 $db = $collectionModel;
@@ -58,10 +58,10 @@ class Reports extends BaseController
                 if (!empty($f['date_acquired'])) $db->where('date_acquired', $f['date_acquired']);
                 if (!empty($f['date_received'])) $db->where('date_received', $f['date_received']);
                 
-                $data['collections'] = $db->orderBy('id', 'DESC')->findAll();
+                $data['collections'] = $db->findAll();
             }
 
-            // 2. Process Journals Filter (Sorted Recent First)
+            // 2. Process Journals Filter
             if (in_array('journals', $categories)) {
                 $data['showJournals'] = true;
                 $db = $journalModel;
@@ -76,10 +76,10 @@ class Reports extends BaseController
                 if (!empty($f['volume']))        $db->where('volume', $f['volume']);
                 if (!empty($f['page']))          $db->where('page', $f['page']);
                 
-                $data['journals'] = $db->orderBy('id', 'DESC')->findAll();
+                $data['journals'] = $db->findAll();
             }
 
-            // 3. Process Transactions Filter (Sorted Recent First)
+            // 3. Process Transactions Filter
             if (in_array('transactions', $categories)) {
                 $data['showTransactions'] = true;
                 $db = $transactionModel;
@@ -95,16 +95,28 @@ class Reports extends BaseController
                        ->orLike('user_id_num', $f['borrower'])
                        ->groupEnd();
                 }
-                if (!empty($f['item_details']))  $db->like('collection_title', $f['item_details']);
+                if (!empty($f['item_details'])) {
+                    $db->like('collection_title', $f['item_details']);
+                }
                 if (!empty($f['requested_on']))  $db->where('DATE(date_requested)', $f['requested_on']);
                 if (!empty($f['due_date']))      $db->where('due_date', $f['due_date']);
+                
+                // NEW FILTERS ADDED HERE
                 if (!empty($f['status']))        $db->where('status', $f['status']);
                 if (!empty($f['date_returned'])) $db->where('DATE(date_returned)', $f['date_returned']);
                 
-                $data['transactions'] = $db->orderBy('id', 'DESC')->findAll();
+                $data['transactions'] = $db->findAll();
             }
         }
 
         return view('admin/reports', $data);
+    }
+
+    public function exportPdf()
+    {
+        echo "<h1>PDF Export Feature</h1>";
+        echo "<p>To complete this feature, open your terminal in VS Code and run: <b>composer require dompdf/dompdf</b></p>";
+        echo "<p>Once installed, we will update this function to convert your HTML table into a downloadable PDF!</p>";
+        echo "<br><a href='" . base_url('admin/reports') . "'>Go Back</a>";
     }
 }

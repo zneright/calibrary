@@ -35,7 +35,7 @@ class Reports extends BaseController
             $data['showReports'] = true;
             $categories = $this->request->getGet('categories');
 
-            // 1. Process Collections Filter (Sorted Recent First)
+            // 1. Process Collections Filter
             if (in_array('collections', $categories)) {
                 $data['showCollections'] = true;
                 $db = $collectionModel;
@@ -58,10 +58,10 @@ class Reports extends BaseController
                 if (!empty($f['date_acquired'])) $db->where('date_acquired', $f['date_acquired']);
                 if (!empty($f['date_received'])) $db->where('date_received', $f['date_received']);
                 
-                $data['collections'] = $db->orderBy('id', 'DESC')->findAll();
+                $data['collections'] = $db->findAll();
             }
 
-            // 2. Process Journals Filter (Sorted Recent First)
+            // 2. Process Journals Filter
             if (in_array('journals', $categories)) {
                 $data['showJournals'] = true;
                 $db = $journalModel;
@@ -76,10 +76,10 @@ class Reports extends BaseController
                 if (!empty($f['volume']))        $db->where('volume', $f['volume']);
                 if (!empty($f['page']))          $db->where('page', $f['page']);
                 
-                $data['journals'] = $db->orderBy('id', 'DESC')->findAll();
+                $data['journals'] = $db->findAll();
             }
 
-            // 3. Process Transactions Filter (Sorted Recent First)
+            // 3. Process Transactions Filter
             if (in_array('transactions', $categories)) {
                 $data['showTransactions'] = true;
                 $db = $transactionModel;
@@ -101,7 +101,7 @@ class Reports extends BaseController
                 if (!empty($f['status']))        $db->where('status', $f['status']);
                 if (!empty($f['date_returned'])) $db->where('DATE(date_returned)', $f['date_returned']);
                 
-                $data['transactions'] = $db->orderBy('id', 'DESC')->findAll();
+                $data['transactions'] = $db->findAll();
             }
         }
 

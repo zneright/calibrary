@@ -65,7 +65,7 @@ class Auth extends BaseController
                 'details'     => "User session started successfully."
             ]);
             
-            // go to the dashboard based on their role
+            // Redirect the user to the correct dashboard based on their role
             return ($user['role'] === 'Admin') 
                 ? redirect()->to('/admin/dashboard') 
                 : redirect()->to('/borrower/dashboard');
@@ -74,24 +74,19 @@ class Auth extends BaseController
             return redirect()->to('/login')->with('error', 'Invalid ID or password.');
         }
     }
-
-    //reset password for testing purposes only, will be removed in production
     public function resetMyPassword() {
     $userModel = new UserModel();
     $newHash = password_hash('123456', PASSWORD_DEFAULT);
     $userModel->where('user_id', '2026-001')->set(['password' => $newHash])->update();
     return "Password for 2026-001 is now: 123456";
-}   
+}
     public function register()
     {
         return view('signup');
     }
 
-
-    //process for registration form
     public function storeUser()
     {
-        //  rules for validation
         $rules = [
             'fullname'         => 'required|min_length[3]',
             'user_id'          => 'required|is_unique[users.user_id]',
@@ -101,13 +96,12 @@ class Auth extends BaseController
             'confirm_password' => 'required|matches[password]' 
         ];
 
-        //If validation fails, send them an errors
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $userModel = new UserModel();
-        //Prepart data with hashed pass
+
         $data = [
             'fullname'           => $this->request->getPost('fullname'),
             'user_id'            => $this->request->getPost('user_id'),
@@ -118,7 +112,7 @@ class Auth extends BaseController
             'verification_token' => null,
             'is_verified'        => 0
         ];
-        //save to db
+
         if ($userModel->insert($data)) {
             
             $logModel = new \App\Models\LogModel(); 
@@ -129,7 +123,7 @@ class Auth extends BaseController
                 'action'      => 'Register',
                 'details'     => 'New account registered and is waiting for admin approval.'
             ]);
-            //Send the "Wait for approval" email and redirect to login page
+
             if ($this->sendApprovalWaitEmail($data['email'], $data['fullname'])) {
                 return redirect()->to('/login')->with('success', 'Registration submitted! Please wait for an admin to approve your account.');
             } else {
@@ -137,7 +131,7 @@ class Auth extends BaseController
             }
         }
     }
-    //  PHPMailer to send an email to the newly registered user
+
     private function sendApprovalWaitEmail($recipientEmail, $recipientName)
     {
         $mail = new PHPMailer(true);

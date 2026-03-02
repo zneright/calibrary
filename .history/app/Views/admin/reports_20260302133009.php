@@ -2,13 +2,6 @@
 
 <?= $this->section('content') ?>
 
-<?php 
-    // Safely capture all current GET parameters (the active filters)
-    $currentGet = service('request')->getGet();
-    $currentGet['export'] = 'true'; // Add export flag for the PDF controller
-    $exportQuery = '?' . http_build_query($currentGet);
-?>
-
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,8 +9,11 @@
             <i class="bi bi-file-earmark-bar-graph me-2 text-primary"></i>Advanced Reports & Filtering
         </h4>
         <div class="d-flex gap-2">
-            <a href="<?= base_url('admin/reports/exportPdf') . $exportQuery ?>" class="btn btn-danger btn-sm shadow-sm fw-semibold" title="Export Filtered Results to PDF" target="_blank">
-                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
+            <a href="<?= base_url('admin/reports/exportPdf') ?>" class="btn btn-danger btn-sm shadow-sm fw-semibold" title="Export All to PDF">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Export to PDF
+            </a>
+            <a href="#" class="btn btn-success btn-sm shadow-sm fw-semibold" title="Export All to Excel">
+                <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Export to Excel
             </a>
         </div>
     </div>
@@ -286,7 +282,7 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane fade" id="pane-transactions" role="tabpanel">
+                   <div class="tab-pane fade" id="pane-transactions" role="tabpanel">
                         <div class="row g-4 px-3">
                             <div class="col-md-4">
                                 <label class="form-label small fw-semibold text-secondary">Trans Id</label>

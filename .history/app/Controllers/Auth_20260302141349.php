@@ -107,7 +107,7 @@ class Auth extends BaseController
         }
 
         $userModel = new UserModel();
-        //Prepart data with hashed pass
+        Prepare the data to be saved
         $data = [
             'fullname'           => $this->request->getPost('fullname'),
             'user_id'            => $this->request->getPost('user_id'),
@@ -118,7 +118,7 @@ class Auth extends BaseController
             'verification_token' => null,
             'is_verified'        => 0
         ];
-        //save to db
+
         if ($userModel->insert($data)) {
             
             $logModel = new \App\Models\LogModel(); 
@@ -129,7 +129,7 @@ class Auth extends BaseController
                 'action'      => 'Register',
                 'details'     => 'New account registered and is waiting for admin approval.'
             ]);
-            //Send the "Wait for approval" email and redirect to login page
+
             if ($this->sendApprovalWaitEmail($data['email'], $data['fullname'])) {
                 return redirect()->to('/login')->with('success', 'Registration submitted! Please wait for an admin to approve your account.');
             } else {
@@ -137,7 +137,7 @@ class Auth extends BaseController
             }
         }
     }
-    //  PHPMailer to send an email to the newly registered user
+
     private function sendApprovalWaitEmail($recipientEmail, $recipientName)
     {
         $mail = new PHPMailer(true);

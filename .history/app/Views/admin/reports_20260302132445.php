@@ -2,13 +2,6 @@
 
 <?= $this->section('content') ?>
 
-<?php 
-    // Safely capture all current GET parameters (the active filters)
-    $currentGet = service('request')->getGet();
-    $currentGet['export'] = 'true'; // Add export flag for the PDF controller
-    $exportQuery = '?' . http_build_query($currentGet);
-?>
-
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,8 +9,11 @@
             <i class="bi bi-file-earmark-bar-graph me-2 text-primary"></i>Advanced Reports & Filtering
         </h4>
         <div class="d-flex gap-2">
-            <a href="<?= base_url('admin/reports/exportPdf') . $exportQuery ?>" class="btn btn-danger btn-sm shadow-sm fw-semibold" title="Export Filtered Results to PDF" target="_blank">
-                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
+            <a href="<?= base_url('admin/reports/exportPdf') ?>" class="btn btn-danger btn-sm shadow-sm fw-semibold" title="Export All to PDF">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Export to PDF
+            </a>
+            <a href="#" class="btn btn-success btn-sm shadow-sm fw-semibold" title="Export All to Excel">
+                <i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Export to Excel
             </a>
         </div>
     </div>
@@ -288,44 +284,11 @@
 
                     <div class="tab-pane fade" id="pane-transactions" role="tabpanel">
                         <div class="row g-4 px-3">
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold text-secondary">Trans Id</label>
-                                <input type="text" name="transactions[trans_id]" value="<?= esc($tFilter['trans_id'] ?? '') ?>" class="form-control shadow-sm" placeholder="e.g. TRX-0001">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold text-secondary">Borrower</label>
-                                <input type="text" name="transactions[borrower]" value="<?= esc($tFilter['borrower'] ?? '') ?>" class="form-control shadow-sm" placeholder="Name or ID">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold text-secondary">Status</label>
-                                <select name="transactions[status]" class="form-select shadow-sm">
-                                    <option value="">Any Status</option>
-                                    <option value="Pending" <?= ($tFilter['status'] ?? '') == 'Pending' ? 'selected' : '' ?>>Pending Request</option>
-                                    <option value="Approved" <?= ($tFilter['status'] ?? '') == 'Approved' ? 'selected' : '' ?>>Approved (Ready for Pickup)</option>
-                                    <option value="Borrowed" <?= ($tFilter['status'] ?? '') == 'Borrowed' ? 'selected' : '' ?>>Borrowed (On Hand)</option>
-                                    <option value="Renewing" <?= ($tFilter['status'] ?? '') == 'Renewing' ? 'selected' : '' ?>>Pending Renewal</option>
-                                    <option value="Returned" <?= ($tFilter['status'] ?? '') == 'Returned' ? 'selected' : '' ?>>Returned</option>
-                                    <option value="Rejected" <?= ($tFilter['status'] ?? '') == 'Rejected' ? 'selected' : '' ?>>Rejected</option>
-                                    <option value="Lost" <?= ($tFilter['status'] ?? '') == 'Lost' ? 'selected' : '' ?>>Lost</option>
-                                    <option value="Damaged" <?= ($tFilter['status'] ?? '') == 'Damaged' ? 'selected' : '' ?>>Damaged</option>
-                                </select>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="form-label small fw-semibold text-secondary">Item Details</label>
-                                <input type="text" name="transactions[item_details]" value="<?= esc($tFilter['item_details'] ?? '') ?>" class="form-control shadow-sm" placeholder="Title or Call No.">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold text-secondary">Requested On</label>
-                                <input type="date" name="transactions[requested_on]" value="<?= esc($tFilter['requested_on'] ?? '') ?>" class="form-control shadow-sm">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold text-secondary">Due Date</label>
-                                <input type="date" name="transactions[due_date]" value="<?= esc($tFilter['due_date'] ?? '') ?>" class="form-control shadow-sm">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label small fw-semibold text-secondary">Date Returned</label>
-                                <input type="date" name="transactions[date_returned]" value="<?= esc($tFilter['date_returned'] ?? '') ?>" class="form-control shadow-sm">
-                            </div>
+                            <div class="col-md-6"><label class="form-label small fw-semibold text-secondary">Trans Id</label><input type="text" name="transactions[trans_id]" value="<?= esc($tFilter['trans_id'] ?? '') ?>" class="form-control shadow-sm" placeholder="e.g. TRX-0001"></div>
+                            <div class="col-md-6"><label class="form-label small fw-semibold text-secondary">Borrower</label><input type="text" name="transactions[borrower]" value="<?= esc($tFilter['borrower'] ?? '') ?>" class="form-control shadow-sm" placeholder="Name or ID"></div>
+                            <div class="col-md-12"><label class="form-label small fw-semibold text-secondary">Item Details</label><input type="text" name="transactions[item_details]" value="<?= esc($tFilter['item_details'] ?? '') ?>" class="form-control shadow-sm" placeholder="Title or Call No."></div>
+                            <div class="col-md-6"><label class="form-label small fw-semibold text-secondary">Requested On</label><input type="date" name="transactions[requested_on]" value="<?= esc($tFilter['requested_on'] ?? '') ?>" class="form-control shadow-sm"></div>
+                            <div class="col-md-6"><label class="form-label small fw-semibold text-secondary">Due Date</label><input type="date" name="transactions[due_date]" value="<?= esc($tFilter['due_date'] ?? '') ?>" class="form-control shadow-sm"></div>
                         </div>
                     </div>
 

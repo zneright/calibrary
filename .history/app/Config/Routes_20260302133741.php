@@ -49,8 +49,8 @@
     $routes->post('reports/approve', 'Reports::approve');
     $routes->post('reports/reject', 'Reports::reject');
     $routes->get('reports/export', 'Reports::exportPdf'); 
-    $routes->get('reports/exportPdf', 'ExportReport::pdf');
-    $routes->get('reports/exportExcel', 'ExportReport::excel');
+    $routes->get('admin/reports/exportPdf', 'ExportReport::pdf');
+    $routes->get('admin/reports/exportExcel', 'ExportReport::excel');
         // Transactions
         $routes->get('transactions', 'Transactions::index');
         $routes->post('transactions/store', 'Transactions::store');

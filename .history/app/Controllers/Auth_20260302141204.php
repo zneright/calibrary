@@ -87,11 +87,8 @@ class Auth extends BaseController
         return view('signup');
     }
 
-
-    //process for registration form
     public function storeUser()
     {
-        //  rules for validation
         $rules = [
             'fullname'         => 'required|min_length[3]',
             'user_id'          => 'required|is_unique[users.user_id]',
@@ -101,13 +98,12 @@ class Auth extends BaseController
             'confirm_password' => 'required|matches[password]' 
         ];
 
-        //If validation fails, send them an errors
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $userModel = new UserModel();
-        //Prepart data with hashed pass
+
         $data = [
             'fullname'           => $this->request->getPost('fullname'),
             'user_id'            => $this->request->getPost('user_id'),
@@ -118,7 +114,7 @@ class Auth extends BaseController
             'verification_token' => null,
             'is_verified'        => 0
         ];
-        //save to db
+
         if ($userModel->insert($data)) {
             
             $logModel = new \App\Models\LogModel(); 
@@ -129,7 +125,7 @@ class Auth extends BaseController
                 'action'      => 'Register',
                 'details'     => 'New account registered and is waiting for admin approval.'
             ]);
-            //Send the "Wait for approval" email and redirect to login page
+
             if ($this->sendApprovalWaitEmail($data['email'], $data['fullname'])) {
                 return redirect()->to('/login')->with('success', 'Registration submitted! Please wait for an admin to approve your account.');
             } else {
@@ -137,7 +133,7 @@ class Auth extends BaseController
             }
         }
     }
-    //  PHPMailer to send an email to the newly registered user
+
     private function sendApprovalWaitEmail($recipientEmail, $recipientName)
     {
         $mail = new PHPMailer(true);

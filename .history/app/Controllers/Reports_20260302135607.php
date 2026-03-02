@@ -1,14 +1,4 @@
-<?php
-
-namespace App\Controllers;
-
-use App\Models\CollectionModel;
-use App\Models\JournalModel;
-use App\Models\TransactionModel;
-
-class Reports extends BaseController
-{
-    public function index()
+public function index()
     {
         $collectionModel = new CollectionModel();
         $journalModel = new JournalModel();
@@ -107,4 +97,3 @@ class Reports extends BaseController
 
         return view('admin/reports', $data);
     }
-}
