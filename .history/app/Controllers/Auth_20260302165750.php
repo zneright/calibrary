@@ -1,0 +1,177 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Models\UserModel;
+use App\Models\LogModel;
+use PHPMailer\PHPMailer\PHPMailer;  
+use PHPMailer\PHPMailer\Exception;  
+
+class Auth extends BaseController
+{
+    public function index()
+    {
+        return view('login');
+    }
+    // Destroys the active session tas loalagout ang user
+      public function logout()
+    {
+        $session = session();
+        $session->destroy(); 
+        return redirect()->to('/login')->with('success', 'Logged out successfully.');
+    }
+    //Process for login form
+  public function attemptLogin()
+    {
+        $session = session();
+        $userModel = new UserModel();$logModel = new LogModel();
+        $logModel = new \App\Models\LogModel();
+
+        $username = $this->request->getPost('username');
+        $password = $this->request->getPost('password');
+
+        if (empty($username) || empty($password)) {
+            return redirect()->to('/login')->with('error', 'Please enter credentials.');
+        }
+        // Search for the user by ID or Email
+        $userIdInput = (string) trim($username);
+        $user = $userModel->where('user_id', $userIdInput)
+                          ->orWhere('email', $userIdInput)
+                          ->first();
+        // Check if exist and if password is matcheddd
+        if ($user && password_verify((string)$password, $user['password'])) {
+            // Block login if an Admin hasn't approved them yet
+            if ($user['is_verified'] == 0) {
+                return redirect()->to('/login')->with('error', 'Account pending approval.');
+            }
+
+            $session->regenerate();
+            // into the active session
+            $session->set([
+                'id'         => $user['id'],
+                'user_id'    => $user['user_id'],
+                'fullname'   => $user['fullname'],
+                'role'       => $user['role'],
+                'avatar'     => $user['avatar'],
+                'isLoggedIn' => TRUE
+            ]);
+
+            //Record in Tthe logs
+            $logModel->insert([
+                'user_name'   => $user['fullname'],
+                'user_id_num' => $user['user_id'],
+                'module'      => 'Authentication',
+                'action'      => 'Login',
+                'details'     => "User session started successfully."
+            ]);
+            
+            // go to the dashboard based on their role
+            return ($user['role'] === 'Admin') 
+                ? redirect()->to('/admin/dashboard') 
+                : redirect()->to('/borrower/dashboard');
+
+        } else {
+            return redirect()->to('/login')->with('error', 'Invalid ID or password.');
+        }
+    }
+
+    //reset password for testing purposes only, will be removed in production
+    public function resetMyPassword() {
+    $userModel = new UserModel();
+    $newHash = password_hash('123456', PASSWORD_DEFAULT);
+    $userModel->where('user_id', '2026-001')->set(['password' => $newHash])->update();
+    return "Password for 2026-001 is now: 123456";
+}   
+    public function register()
+    {
+        return view('signup');
+    }
+
+
+    //process for registration form
+    public function storeUser()
+    {
+        //  rules for validation
+        $rules = [
+            'fullname'         => 'required|min_length[3]',
+            'user_id'          => 'required|is_unique[users.user_id]',
+            'email'            => 'required|valid_email|is_unique[users.email]',
+            'department'       => 'required',
+            'password'         => 'required|min_length[6]',
+            'confirm_password' => 'required|matches[password]' 
+        ];
+
+        //If validation fails, send them an errors
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $userModel = new UserModel();
+        //Prepart data with hashed pass
+        $data = [
+            'fullname'           => $this->request->getPost('fullname'),
+            'user_id'            => $this->request->getPost('user_id'),
+            'email'              => $this->request->getPost('email'),
+            'department'         => $this->request->getPost('department'), 
+            'role'               => $this->request->getPost('role'),
+            'password'           => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'verification_token' => null,
+            'is_verified'        => 0
+        ];
+        //save to db
+        if ($userModel->insert($data)) {
+            
+            $logModel = new \App\Models\LogModel(); 
+            $logModel->insert([
+                'user_name'   => $data['fullname'],
+                'user_id_num' => $data['user_id'],
+                'module'      => 'Authentication',
+                'action'      => 'Register',
+                'details'     => 'New account registered and is waiting for admin approval.'
+            ]);
+            //Send the "Wait for approval" email and redirect to login page
+            if ($this->sendApprovalWaitEmail($data['email'], $data['fullname'])) {
+                return redirect()->to('/login')->with('success', 'Registration submitted! Please wait for an admin to approve your account.');
+            } else {
+                return redirect()->to('/login')->with('error', 'Account registered, but failed to send the notification email.');
+            }
+        }
+    }
+
+    private function sendApprovalWaitEmail($recipientEmail, $recipientName)
+    {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com'; 
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'zneright2@gmail.com'; 
+            $mail->Password   = 'ivcfiqpztkwapymf';    
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->setFrom('zneright2@gmail.com', 'CALIS Library');
+            $mail->addAddress($recipientEmail, $recipientName);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Account Pending Approval - CALIS v2.0';
+            $mail->Body    = "
+                <div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f8f9fa; border-radius: 8px;'>
+                    <h3 style='color: #0d6efd;'>Welcome to CALIS v2.0, {$recipientName}!</h3>
+                    <p style='color: #333;'>We have successfully received your registration request for the Data Bank and Library Services (DBLS).</p>
+                    <p style='color: #333;'><b>Your account is currently pending approval from a System Administrator.</b></p>
+                    <p style='color: #333;'>You will not be able to log in until your access is granted. We will notify you once your account is ready.</p>
+                    <br>
+                    <p style='color: #6c757d; font-size: 0.9em;'>Thank you for your patience!</p>
+                </div>
+            ";
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            log_message('error', "Mail could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            return false;
+        }
+    }
+}
