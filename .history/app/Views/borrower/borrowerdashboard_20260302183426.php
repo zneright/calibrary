@@ -3,16 +3,6 @@
 <?= $this->section('content') ?>
 
 <style>
-        .bg-danger.animate__infinite {
-        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-        animation: pulse-red 2s infinite;
-    }
-
-    @keyframes pulse-red {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-    }
     /* Modern Card Hover Effects */
     .stat-card { 
         transition: all 0.3s ease; 

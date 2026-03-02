@@ -3,16 +3,6 @@
 <?= $this->section('content') ?>
 
 <style>
-        .bg-danger.animate__infinite {
-        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
-        animation: pulse-red 2s infinite;
-    }
-
-    @keyframes pulse-red {
-        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
-        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
-        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
-    }
     /* Modern Card Hover Effects */
     .stat-card { 
         transition: all 0.3s ease; 
@@ -179,45 +169,45 @@
                                         <i class="bi bi-calendar3 me-1"></i><?= date('M d, Y', strtotime($row['date_requested'])) ?>
                                     </td>
                                     <td class="border-light">
-                                        <?php 
-                                            $status = $row['status'];
-                                            $badgeClass = 'bg-secondary text-white'; // Default
-                                            $displayLabel = $status;
-                                            
-                                            // 1. PENDING REQUESTS
-                                            if ($status == 'Pending') {
-                                                $badgeClass = 'bg-warning text-dark';
-                                                $displayLabel = 'Pending Review';
-                                            } 
-                                            
-                                            // 2. READY FOR PICKUP
-                                            elseif ($status == 'Approved') { 
-                                                $badgeClass = 'bg-success text-white'; 
-                                                $displayLabel = 'Ready for Pickup'; 
-                                            }
+    <?php 
+        $status = $row['status'];
+        $badgeClass = 'bg-secondary text-white'; // Default
+        $displayLabel = $status;
+        
+        // 1. PENDING REQUESTS
+        if ($status == 'Pending') {
+            $badgeClass = 'bg-warning text-dark';
+            $displayLabel = 'Pending Review';
+        } 
+        
+        // 2. READY FOR PICKUP
+        elseif ($status == 'Approved') { 
+            $badgeClass = 'bg-success text-white'; 
+            $displayLabel = 'Ready for Pickup'; 
+        }
 
-                                            // 3. ON HAND / RENEWING / OVERDUE
-                                            elseif ($status == 'Borrowed' || $status == 'Renewing') { 
-                                                // Check if it's actually overdue
-                                                $isOverdue = (!empty($row['due_date']) && strtotime($row['due_date']) < strtotime($today));
-                                                
-                                                if ($isOverdue) {
-                                                    $badgeClass = 'bg-danger text-white animate__animated animate__pulse animate__infinite';
-                                                    $displayLabel = 'Overdue';
-                                                } elseif ($status == 'Renewing') {
-                                                    $badgeClass = 'bg-info text-dark';
-                                                    $displayLabel = 'Extension Pending';
-                                                } else {
-                                                    $badgeClass = 'bg-primary text-white';
-                                                    $displayLabel = 'On Hand';
-                                                }
-                                            }
-                                        ?>
-                                        <span class="badge <?= $badgeClass ?> px-3 py-2 rounded-pill fw-medium shadow-sm" style="font-size: 0.75rem;">
-                                            <i class="bi bi-circle-fill me-1 small" style="font-size: 0.5rem;"></i>
-                                            <?= esc($displayLabel) ?>
-                                        </span>
-                                    </td>
+        // 3. ON HAND / RENEWING / OVERDUE
+        elseif ($status == 'Borrowed' || $status == 'Renewing') { 
+            // Check if it's actually overdue
+            $isOverdue = (!empty($row['due_date']) && strtotime($row['due_date']) < strtotime($today));
+            
+            if ($isOverdue) {
+                $badgeClass = 'bg-danger text-white animate__animated animate__pulse animate__infinite';
+                $displayLabel = 'Overdue';
+            } elseif ($status == 'Renewing') {
+                $badgeClass = 'bg-info text-dark';
+                $displayLabel = 'Extension Pending';
+            } else {
+                $badgeClass = 'bg-primary text-white';
+                $displayLabel = 'On Hand';
+            }
+        }
+    ?>
+    <span class="badge <?= $badgeClass ?> px-3 py-2 rounded-pill fw-medium shadow-sm" style="font-size: 0.75rem;">
+        <i class="bi bi-circle-fill me-1 small" style="font-size: 0.5rem;"></i>
+        <?= esc($displayLabel) ?>
+    </span>
+</td>
                                     <td class="text-end pe-4 border-light">
                                         <a href="/borrower/my-books" class="btn btn-sm btn-outline-dark rounded-pill small px-4 fw-semibold shadow-sm">Manage</a>
                                     </td>

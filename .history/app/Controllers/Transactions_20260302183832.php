@@ -19,7 +19,7 @@ public function index() {
             'borrowed' => $model->where('status', 'Borrowed')->countAllResults(),
         ];
 
-        $query = $model->orderBy('created_at', 'ASC');
+        $query = $model->orderBy('created_at', 'DESC');
 
         // Apply the filter if a specific status was clicked
         if ($statusFilter) {
