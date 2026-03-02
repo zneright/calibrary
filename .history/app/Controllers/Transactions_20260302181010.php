@@ -8,31 +8,25 @@ use PHPMailer\PHPMailer\Exception;
 
 class Transactions extends BaseController {
     //fetch all transactions and display in view    
-public function index() {
-        $model = new TransactionModel();
-        $statusFilter = $this->request->getGet('status');
+  public function index() {
+    $model = new TransactionModel();
+    $statusFilter = $this->request->getGet('status');
 
-        // Fetch counts for specific badges
-        $data['counts'] = [
-            'pending'  => $model->whereIn('status', ['Pending', 'Renewing'])->countAllResults(),
-            'approved' => $model->where('status', 'Approved')->countAllResults(),
-            'borrowed' => $model->where('status', 'Borrowed')->countAllResults(),
-        ];
+    // Start building the query
+    $query = $model->orderBy('created_at', 'DESC');
 
-        $query = $model->orderBy('created_at', 'DESC');
-
-        // Apply the filter if a specific status was clicked
-        if ($statusFilter) {
-            if ($statusFilter === 'Pending') {
-                $query->whereIn('status', ['Pending', 'Renewing']);
-            } else {
-                $query->where('status', $statusFilter);
-            }
-        }
-
-        $data['transactions'] = $query->findAll();
-        return view('admin/transactions', $data);
+    // Apply the filter if a specific status was clicked
+    if ($statusFilter) {
+        if ($statusFilter === 'Pending') {
+        $query->whereIn('status', ['Pending', 'Renewing']);
+    } else {
+        $query->where('status', $statusFilter); 
     }
+    }
+
+    $data['transactions'] = $query->findAll();
+    return view('admin/transactions', $data);
+}
 
     //creates a new in-app notifications for specific user
     private function sendNotification($userId, $type, $message) {

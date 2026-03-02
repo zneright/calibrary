@@ -4,36 +4,38 @@
 <div class="container-fluid">
 
    <div class="d-flex justify-content-between align-items-center mb-4">
-       <ul class="nav nav-pills bg-white p-1 rounded-pill shadow-sm border gap-1">
+        <ul class="nav nav-pills bg-white p-2 rounded shadow-sm border">
             <li class="nav-item">
-                <a class="nav-link rounded-pill px-4 <?= !isset($_GET['status']) ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions') ?>">
-                    All <span class="badge bg-secondary text-white ms-1 small rounded-pill"></span>
+                <a class="nav-link <?= !isset($_GET['status']) ? 'active fw-bold' : 'text-secondary' ?>" href="<?= base_url('admin/transactions') ?>">
+                    All Transactions
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Pending') ?>">
-                    Pending <span class="badge bg-warning text-dark ms-1 small rounded-pill"><?= $counts['pending'] ?? 0 ?> Requests</span>
+                <a class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'active fw-bold' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Pending') ?>">
+                    Pending <span class="badge bg-warning text-dark ms-1 small rounded-pill">Requests</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Approved') ? 'active fw-bold' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Approved') ?>">
+                    Ready for Pickup <span class="badge bg-primary ms-1 small rounded-pill">To Handover</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Borrowed') ? 'active fw-bold' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Borrowed') ?>">
+                    On Hand
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Approved') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Approved') ?>">
-                    Ready for Pickup <span class="badge bg-primary text-white ms-1 small rounded-pill"><?= $counts['approved'] ?? 0 ?> Handover</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Borrowed') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Borrowed') ?>">
-                    On Hand <span class="badge bg-info text-dark ms-1 small rounded-pill"><?= $counts['borrowed'] ?? 0 ?> Borrowed</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Returned') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Returned') ?>">
-                    Returned <span class="badge bg-success text-white ms-1 small rounded-pill"> Done</span>
+                <a class="nav-link <?= (isset($_GET['status']) && $_GET['status'] == 'Returned') ? 'active fw-bold' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Returned') ?>">
+                    Returned
                 </a>
             </li>
         </ul>
 
-        <button class="btn btn-outline-secondary rounded-pill px-4 shadow-sm bg-white" onclick="window.location.reload();">
-            <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+        <button class="btn btn-outline-secondary shadow-sm bg-white" onclick="window.location.reload();">
+            <i class="bi bi-arrow-clockwise"></i> Refresh
         </button>
     </div>
 
@@ -42,6 +44,13 @@
             <h5 class="mb-0 fw-bold text-secondary">
                 <i class="bi bi-arrow-left-right me-2 text-primary"></i>
                 <?= isset($_GET['status']) ? esc($_GET['status']) : 'All' ?> Transactions
+            </h5>
+        </div>
+
+        <div class="card-body p-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold text-secondary">
+                <i class="bi bi-arrow-left-right me-2"></i>Transactions
             </h5>
         </div>
 

@@ -3,31 +3,31 @@
 <?= $this->section('content') ?>
 <div class="container-fluid">
 
-   <div class="d-flex justify-content-between align-items-center mb-4">
-       <ul class="nav nav-pills bg-white p-1 rounded-pill shadow-sm border gap-1">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <ul class="nav nav-pills bg-white p-1 rounded-pill shadow-sm border gap-1">
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-4 <?= !isset($_GET['status']) ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions') ?>">
-                    All <span class="badge bg-secondary text-white ms-1 small rounded-pill"></span>
+                    All
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Pending') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Pending') ?>">
-                    Pending <span class="badge bg-warning text-dark ms-1 small rounded-pill"><?= $counts['pending'] ?? 0 ?> Requests</span>
+                    Pending <span class="badge bg-warning text-dark ms-1 small rounded-pill"><?= $counts['pending'] ?></span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Approved') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Approved') ?>">
-                    Ready for Pickup <span class="badge bg-primary text-white ms-1 small rounded-pill"><?= $counts['approved'] ?? 0 ?> Handover</span>
+                    Ready for Pickup <span class="badge bg-primary text-white ms-1 small rounded-pill"><?= $counts['approved'] ?></span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Borrowed') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Borrowed') ?>">
-                    On Hand <span class="badge bg-info text-dark ms-1 small rounded-pill"><?= $counts['borrowed'] ?? 0 ?> Borrowed</span>
+                    On Hand <span class="badge bg-info text-dark ms-1 small rounded-pill"><?= $counts['borrowed'] ?></span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Returned') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Returned') ?>">
-                    Returned <span class="badge bg-success text-white ms-1 small rounded-pill"> Done</span>
+                    Returned
                 </a>
             </li>
         </ul>

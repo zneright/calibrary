@@ -125,40 +125,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-light border-0">
-                <h6 class="modal-title fw-bold" style="color: #1a2942;">
-                    <i class="bi bi-shield-lock me-2"></i>Reset Password
-                </h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            
-            <form action="<?= base_url('borrower/profile/request-reset-code') ?>" method="POST">
-                <?= csrf_field() ?>
-                <div class="modal-body p-4">
-                    <p class="small text-muted mb-4">We will send a 6-digit verification code to your registered email to verify your identity.</p>
-                    
-                    <div class="form-check border rounded p-3 mb-3 shadow-sm" style="cursor: pointer;" onclick="document.getElementById('resetEmail').checked = true;">
-                        <input class="form-check-input ms-1 mt-2" type="radio" name="reset_method" id="resetEmail" value="email" checked>
-                        <label class="form-check-label ms-3 d-block w-100" for="resetEmail" style="cursor: pointer;">
-                            <span class="d-block fw-bold text-dark small mb-1">Send code via Email</span>
-                            <span class="d-block text-muted small"><i class="bi bi-envelope me-1"></i> <?= esc($user['email']) ?></span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="modal-footer bg-light border-0">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn text-white btn-sm px-3" style="background-color: #1e3a8a;">
-                        Send Code <i class="bi bi-arrow-right ms-1"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </div>
 <?= $this->endSection() ?>
 

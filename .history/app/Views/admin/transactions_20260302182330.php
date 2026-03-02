@@ -46,6 +46,13 @@
         </div>
 
         <div class="card-body p-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold text-secondary">
+                <i class="bi bi-arrow-left-right me-2"></i>Transactions
+            </h5>
+        </div>
+
+        <div class="card-body p-4">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover w-100" id="transactionsTable">
                     <thead class="table-light align-middle text-center" style="font-size: 0.9rem;">

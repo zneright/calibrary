@@ -80,6 +80,7 @@
         $routes->post('profile/process-reset', 'Profile::processReset');
         $routes->post('profile/request-reset-code', 'Profile::requestResetCode');
         $routes->get('verify-reset', 'Profile::verifyResetView');
+        
     });
 
 
@@ -104,10 +105,4 @@
         $routes->get('notificationlist', 'BorrowerController::notificationlist');
         $routes->post('markSingleRead/(:num)', 'BorrowerController::markSingleRead/$1');
         $routes->post('notifications/markRead', 'BorrowerController::markNotificationsRead');
-
-        // ---Profile---
-        $routes->post('profile/request-reset-code', 'BorrowerController::requestResetCode');
-        $routes->get('verify-reset', 'BorrowerController::verifyResetView');
-        $routes->post('profile/process-reset', 'BorrowerController::processReset');
     });
-

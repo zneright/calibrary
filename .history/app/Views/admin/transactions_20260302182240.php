@@ -7,7 +7,7 @@
        <ul class="nav nav-pills bg-white p-1 rounded-pill shadow-sm border gap-1">
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-4 <?= !isset($_GET['status']) ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions') ?>">
-                    All <span class="badge bg-secondary text-white ms-1 small rounded-pill"></span>
+                    All <span class="badge bg-secondary text-white ms-1 small rounded-pill"><?= $counts['all'] ?? 0 ?></span>
                 </a>
             </li>
             <li class="nav-item">
@@ -27,7 +27,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link rounded-pill px-3 <?= (isset($_GET['status']) && $_GET['status'] == 'Returned') ? 'active fw-bold shadow-sm' : 'text-secondary' ?>" href="<?= base_url('admin/transactions?status=Returned') ?>">
-                    Returned <span class="badge bg-success text-white ms-1 small rounded-pill"> Done</span>
+                    Returned <span class="badge bg-success text-white ms-1 small rounded-pill"><?= $counts['returned'] ?? 0 ?> Done</span>
                 </a>
             </li>
         </ul>
@@ -42,6 +42,13 @@
             <h5 class="mb-0 fw-bold text-secondary">
                 <i class="bi bi-arrow-left-right me-2 text-primary"></i>
                 <?= isset($_GET['status']) ? esc($_GET['status']) : 'All' ?> Transactions
+            </h5>
+        </div>
+
+        <div class="card-body p-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold text-secondary">
+                <i class="bi bi-arrow-left-right me-2"></i>Transactions
             </h5>
         </div>
 

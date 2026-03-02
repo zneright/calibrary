@@ -8,17 +8,20 @@ use PHPMailer\PHPMailer\Exception;
 
 class Transactions extends BaseController {
     //fetch all transactions and display in view    
-public function index() {
+ public function index() {
         $model = new TransactionModel();
         $statusFilter = $this->request->getGet('status');
 
-        // Fetch counts for specific badges
+        // --- NEW: Fetch counts for the badges ---
         $data['counts'] = [
+            'all'      => $model->countAllResults(),
             'pending'  => $model->whereIn('status', ['Pending', 'Renewing'])->countAllResults(),
             'approved' => $model->where('status', 'Approved')->countAllResults(),
             'borrowed' => $model->where('status', 'Borrowed')->countAllResults(),
+            'returned' => $model->where('status', 'Returned')->countAllResults(),
         ];
 
+        // Start building the query
         $query = $model->orderBy('created_at', 'DESC');
 
         // Apply the filter if a specific status was clicked
